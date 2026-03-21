@@ -1,0 +1,71 @@
+### BEWARE: THE FOLLOWING CODE DOESNT WORK
+### WAITING FOR THIS SNIPPET TO BE GRADED, THEN UPDATE WITH PROPER CODE
+
+
+## Summary:  [The script creates a copy of the orcas layer with a new field, ViewRatio, which represents Eye_Height divided by Tide_Height]
+
+## Required inputs: [User must input favoritefield, view_ratio, and determine which fields will be compared]
+
+## Script Output:  [neworcas field will be populated with a comparison]
+
+#####   SCRIPT WITH DETAILED COMMENTS
+
+##  A handful of comments are provided.  You will be graded on how thoroughly you
+##  document the rest of the code with more comments.
+
+# import the arcpy site package to access arcpy functions in this script
+import arcpy
+
+# the script tool will need to get four pieces of information from the user via the tool's dialog box
+# first, ask for the path to the feature class containing orca data
+# This is accomplished by getting the parameters
+orcas = arcpy.GetParameterAsText(0)
+favoritefield = arcpy.GetParameterAsText(1)
+neworcas = arcpy.GetParameterAsText(2)
+behavior = arcpy.GetParameterAsText(3)
+#Second, user must choose any one field as a favorite field to be compared.
+# Call out the field and give options to select, like in the earlier portion of this assignment
+favoritefield1 = ['Fix_Station','*Date','Eye_Height','Fix_Group',
+                  'Fix_Station', 'Fix_Type','Fix_Type_Behavior',
+                  'Station_Height','Tide_Height','Time'
+                  ]
+wrong = True
+fieldselect = 10
+while wrong:
+  if fieldselect > 10:
+    fieldselect = int(input("Please select a number between 0 and 10"))
+    if (fieldselect < 5) and (fieldselect > -1) :
+        wrong = False
+print (favoritefield1[fieldselect])
+
+
+# fourth, ask the user to select an orca action from those recorded in the field Fix_Type_Behavior
+# The script originally had the command two lines down set to False.
+# This should be changed so that the tool may be run multiple times with different input parameters for favoritefield.
+arcpy.env.overwriteOutput = True
+
+viewfield = "ViewRatio"
+orcaslist = ["Fix_Type_Behavior",favoritefield,"Eye_Height","Tide_Height","ViewRatio"]
+
+# make a copy of the original orca layers, and call it "neworcas"
+arcpy.management.CopyFeatures(orcas,neworcas)
+arcpy.management.AddField(neworcas,"ViewRatio","DOUBLE")
+
+with arcpy.da.UpdateCursor(neworcas,orcaslist) as cursor:
+    for row in cursor:
+        arcpy.AddMessage("Your favorite field contains {0}".format(row[1]))
+        
+if row[0] == behavior:
+    arcpy.AddMessage ("Calculating view ratio for your selected behavior")
+    # the view ratio is calculated by dividing Eye_Height by Tide_Height
+
+    # Simply dividing row [2] by row [3] could cause an error if either row has a value of 0
+    # Adding an IF statement to stop an x / 0 error
+    # Also, I fixed the spacing
+if row[3] == 0: 
+    print("Cannot divide by zero")
+else:
+    row[4] = row[2]/row[3]
+    cursor.updateRow(row)
+
+                
