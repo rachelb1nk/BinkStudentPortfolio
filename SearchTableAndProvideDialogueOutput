@@ -6,7 +6,7 @@
 # Import arcpy as needed
 import arcpy
 
-# Define the standalone table anf fields  
+# Define the standalone table and fields  
 def print_any_table(cTable):
 # Select fields
     ourFields = ['OBJECTID','StreetName']
