@@ -1,0 +1,78 @@
+# Import arcpy, environment, and os to be able to reference workspace and features within
+import arcpy
+
+from arcpy import env
+
+import os
+
+# Below, set workspace environment 
+arcpy.env.workspace = r"C:\ewu\ArcGisProjects\GISProgrammingFinal\GISProgrammingFinal.gdb"
+
+## Portion 2 of exercise: Creating new feature classes
+
+# Set up the output variables for the new feature class
+out_workspace = r"C:\ewu\ArcGisProjects\GISProgrammingFinal\GISProgrammingFinal.gdb"
+out_name = "PotentialImpact"
+geometry_type = "POINT"
+# Spatial reference is optional
+spatial_ref = arcpy.Describe(r"C:\ewu\ArcGisProjects\GISProgrammingFinal\FinalProjectDATA\FinalProject.gdb\Earthquake_SampleData").spatialReference
+
+# Create the actual create feature class command
+arcpy.management.CreateFeatureclass(
+    out_workspace,
+    out_name,
+    geometry_type,
+    spatial_reference=spatial_ref
+)
+
+## Portion 3 of exercise: Copying features into new feature class
+                             
+# Generate a list of feature classes within the geodatabase
+# This step may not be necessary
+# The feature classes may already be interactive by setting...
+# ... workspace environment above
+fc_list = arcpy.ListFeatureClasses()
+
+# Copy the features within the selected feature class next
+
+for featureclass in fc_list:
+    if featureclass == "Earthquake_SampleData":
+    # Make sure to include the new output feature class path and name created above
+        out_featureclass = os.path.join(out_workspace, out_name)
+        arcpy.management.CopyFeatures(featureclass, out_featureclass)
+
+## Portion 4 of exercise: Create the required field within feature class
+
+# Workspace and environment have already been added
+# Proceed to setting variables
+
+inFeatures = "PotentialImpact"
+fieldName1 = "PotentialImpact"
+fieldAlias = "PotImpactCalc"
+
+# Run AddField for the new field
+arcpy.management.AddField(inFeatures, fieldName1, "DOUBLE",
+                          field_alias=fieldAlias, field_is_nullable="NULLABLE")
+
+# Portion 5 of the exercise: Calculate field
+
+# Make sure to import math or the square root command will fail
+
+import math
+
+arcpy.management.CalculateField(
+    "PotentialImpact",
+    "PotentialImpact",
+    "!MAGNITUDE! / math.sqrt(!DEPTH! + 1)",
+    "PYTHON3"
+)
+
+### The code worked once but created a blank output feature class
+### This seems to be because Earthquake_SampleData did not exist within the referenced location
+### I accidentally added it to the project without importing to the project gdb
+### Then it kept erroring saying that the feature already existed
+### I tried deleting the feature class out but continued to get the same error
+### Even when I saved and closed the Pro application
+### Not sure if this is a cookies issue or if I missed something else
+
+
