@@ -1,0 +1,58 @@
+# Also In Create Feature Class on ArcPro
+# You know what to do to get this to work in a standalone editor
+
+# First, you start with defining the field and assigning a category
+def assign_category(RESNAME):
+    if RESNAME is None:
+      return "Other"
+    RESNAME = RESNAME.lower()
+# Now use a series of if statements 
+# Indicate if stringX is in field 1, field 2 should now have stringY
+# This is a series of if statements that will work but are ridiculously bloated
+# RACHEL FROM THE FUTURE CONSIDER USING THE COMMENTED OUT STUFF
+# FROM LINE 42 ONWARD
+# IT WILL BE FASTER FOR LARGEST VARIABLE SETS
+    if "auditorium" in RESNAME:
+      return "Gathering Place"
+    if "club" in RESNAME:
+      return "Gathering Place"
+    if "ranch" in RESNAME:
+       return "Gathering Place"
+    if "villa" in RESNAME:
+      return "Gathering Place"
+    if "school" in RESNAME:
+      return "Education"
+    if "church" in RESNAME:
+      return "Religious"
+    if "chapel" in RESNAME:
+      return "Religious"
+    if "battery" in RESNAME:
+      return "Military"
+    if "barracks" in RESNAME:
+      return "Military"
+    if "s.s." in RESNAME:
+      return "Military"
+    if "s. s." in RESNAME:
+      return "Military"
+    if "house" in RESNAME or "apartments" in RESNAME or "residence" in RESNAME:
+      return "Residential"
+    else:
+      return "Other"
+# The following is only set up for a snippet of the code above but can be editted as needed
+#def categorize_resname(resname):
+#  resname = resname.lower()  # make it case-insensitive
+#    keyword_map = {
+ #       "auditorium": "Gathering Place",
+  #      "club": "Gathering Place",
+   #     "ranch": "Gathering Place",
+    #    "villa": "Gathering Place",
+     #   "school": "Education",
+    #    "church": "Religious",
+   #     "chapel": "Religious"
+  #  }
+#
+#    for keyword, category in keyword_map.items():
+#        if keyword in resname:
+#            return category
+#
+#    return "Other"
