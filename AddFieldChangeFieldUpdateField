@@ -1,0 +1,53 @@
+# Designed for standalone editor
+# The purpose of this code is to duplicate a  field within a standalone table
+# But remove a portion of the field at the end
+# In the example, a zipcode at end of address is removed
+# Import arcpy as needed
+import arcpy
+
+## This section of code was designed to accompany "SearchTableAndProvideDialogueOutput" code
+## You may need to redefine workspace
+
+# Define the table
+coffee_table = r"C:\ewu\ArcGisProjects\Mod2Assignment1\Mod2Assignment1.gdb\Cheney_Coffee_Places"
+# Define print_any_table and fields
+def print_any_table(coffee_Table):
+   ourFields = ['OBJECTID','StreetName'] 
+# print is a good way of checking that you have the right data
+# To not check this and have a smoother code, remove everything from
+# line directly below line where coffee_table is defined 
+# to print_any_table command
+print_any_table(coffee_table)
+
+
+# The following below is helpful for creating a temporary view of table
+# Commented out because its unnecessary here
+# Kept in code because tangentially related
+# arcpy.MakeTableView_management(r"C:\ewu\ArcGisProjects\Mod2Assignment1\Mod2Assignment1.gdb\Cheney_Coffee_Places","CoffeeSpotsEWUTemp")
+
+# Add a new field. 
+# BEWARE: Some optional fields not included below. You may need them in other circumstances
+arcpy.management.AddField(coffee_table,"StreetAddrNoZip","TEXT")
+
+# Define change fields for the Update field function
+changeFields = ['StreetName','StreetAddrNoZip']
+
+# Update field
+# BEWARE: Below is only set up for instances where there is a number at the end
+with arcpy.da.UpdateCursor(coffee_table, changeFields) as cursor:
+# Split the field into different strings, prepping for removal 
+    for row in cursor:
+        existing_value = row[0]
+        if existing_value:
+            parts = existing_value.split()
+# Replace the string at the end of the field
+# Only if the string is a number
+# This won't remove zipcode placed anywhere else within the field
+            if parts[-1].replace("-", "").isdigit():
+              parts = parts[:-1]
+
+            row[1] = " ".join(parts)
+
+# Make sure to update the row to join everything back together and have a clean output
+            cursor.updateRow(row)
+            print(row)
