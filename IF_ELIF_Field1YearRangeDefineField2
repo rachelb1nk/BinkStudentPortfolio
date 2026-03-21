@@ -1,0 +1,18 @@
+# This was originally created in the field calculator within ArcGIS Pro
+# If using standalone editor...
+# ...import arcpy, navigate to workspace, etc. 
+# make sure to also run calculate field
+## Change feature class names as needed
+
+# If errors, confirm the indentation is correct
+# Set up as three output options
+# Set up a nested statement if you need more than three output options
+def find_era(year):
+    new_era= "NA" 
+    if year < 1950:
+        new_era = "Phase One"
+    elif (year >= 1950) and (year < 1990):
+            new_era = "Phase Two" 
+    else: 
+            new_era = "Phase Three" 
+    return new_era
