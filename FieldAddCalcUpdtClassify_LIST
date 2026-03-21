@@ -1,0 +1,83 @@
+# Created for standalone editor
+# The purpose of this code is to add new fields and calculate the fields based on prexisting fields 
+
+# Import arcpy and link workspace for feature class 
+
+import arcpy
+
+fc = r"C:\ewu\ArcGisProjects\Mod2Assignment1\Mod2Assignment1.gdb\MustSummarize"
+
+# Add new fields
+
+new_field = "GoldRank"
+arcpy.management.AddField(fc, new_field, "TEXT")
+new_field = "SilverRank"
+arcpy.management.AddField(fc, new_field, "TEXT")
+new_field = "NickelRank"
+arcpy.management.AddField(fc, new_field, "TEXT")
+
+# Preeisting fields to be analyzed
+# These fields will inform the output placed into new fields
+fields = ["Gold", "Silver", "Nickel"]
+
+# Set accumulators and counters so things are adequately defined 
+# And so that a starting point has been determined
+
+gold_total = 0
+silver_total = 0
+nickel_total = 0
+row_count = 0
+
+# Count rows and calc totals
+
+with arcpy.da.SearchCursor(fc,fields) as cursor:
+    for row in cursor:
+# Add field value to its running total 
+# Count number of rows processed
+        gold_total += row[0]
+        silver_total += row[1]
+        nickel_total += row[2]
+        row_count += 1
+
+# Calculate averages
+
+gold_avg = gold_total / row_count
+silver_avg = silver_total / row_count
+nickel_avg = nickel_total / row_count
+
+# Print the averages to verify
+print("Gold Average:", gold_avg)
+print("Silver Average:", silver_avg)
+print("Nickel Average:", nickel_avg)
+
+# Update fields with original values and new rank fields
+update_fields = ["Gold", "Silver", "Nickel", "GoldRank", "SilverRank", "NickelRank"]
+
+# Classify each row as above/ below/ average
+with arcpy.da.UpdateCursor(fc, update_fields) as cursor:
+    for row in cursor:
+        above_count = 0
+
+# Compare field's value to average and assign rank
+        if row[0] >= gold_avg:
+            row[3] = "above"
+        else:
+            row[3] = "below"
+    
+        if row[1] >= silver_avg:
+            row[4] = "above"
+        else:
+            row[4] = "below"
+    
+        if row[2] >= nickel_avg:
+            row[5] = "above"
+        else:
+            row[5] = "below"
+    # Save updated row into table
+        cursor.updateRow(row)
+
+# Final print statements to verify that it worked 
+print("GoldRank", [3])
+print("SilverRank", [4])
+print("NickelRank", [5])
+
