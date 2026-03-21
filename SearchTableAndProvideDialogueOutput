@@ -1,0 +1,25 @@
+# This code has some bloat
+# Designed for standalone editor
+# The purpose of this code is to search for data within specified field
+# And to print out the results included within a determined dialogue
+# In the example, a zipcode at end of address is removed
+# Import arcpy as needed
+import arcpy
+
+# Define the standalone table anf fields  
+def print_any_table(cTable):
+# Select fields
+    ourFields = ['OBJECTID','StreetName']
+# SearchCursor searches rows from top to bottom in a table
+# for cmnd indicates how the rows should be read
+## You may need to change input to cTable to get it to work...
+    with arcpy.da.SearchCursor(coffee_table,ourFields) as cursor:
+        for row in cursor:
+            rownum = row[0]
+            rowaddr = row[1]
+# Print output of selected rows nested within dialogue
+            print ("In row {0}, the address is {1}".format(rownum,rowaddr))
+        
+
+
+    
