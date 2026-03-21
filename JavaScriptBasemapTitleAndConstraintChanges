@@ -1,3 +1,5 @@
+// Most of this code was pulled from https://developers.arcgis.com/javascript/latest/sample-code/intro-mapview
+// Edited title, basemap, and some constraints to get specific map view
 <!doctype html>
 <html lang="en">
   <head>
