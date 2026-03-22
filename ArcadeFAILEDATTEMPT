@@ -1,0 +1,32 @@
+# Just adding this for posterity sake even though it didn't work. 
+# See word doc in Canvas to see what other code snippets were tried.
+
+# Below are a few things I tried
+# Snippet 1
+
+# var fires = FeatureSetByName($datastore, "Historic Fires");
+#
+# for (var fire in fires) {
+#    if (Within($feature, Geometry(fire))) {
+#        return trueValue_;
+#    }
+# }
+#
+# return falseValue_;
+
+# Snippet 2
+# For this snippet I tried a few variations with other commands/functions like Contains, Touches, Intersects
+
+// If Hiking Trails is within Historic Fires
+IF(Within("Hiking Trails", "Historic Fires"), "Symbology for Within", "Symbology for Not Within")
+
+
+
+## To the best of my knowledge, all commands/functions I tried didn't work because 
+## feature classes and/ or funtions weren't being recognized
+
+## ChatGPT seemed to think that this is because the feature classes were on a hosted layer 
+## I wonder if the feature classes had names other than 
+
+## To be quite honest, I just didn't dedicate enough time to this portion of the final
+
